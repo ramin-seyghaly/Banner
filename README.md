@@ -18,7 +18,7 @@ Step 2. Add the dependency
 	        implementation 'com.github.ramin-seyghaly:Banner:Tag'
 	}
 Share this release:
-https://jitpack.io/#ramin-seyghaly/Banner/Tag
+[![](https://jitpack.io/v/ramin-seyghaly/Banner.svg)](https://jitpack.io/#ramin-seyghaly/Banner)
 
 # How To Use Banner
 -initialize Ads in Base Activity
