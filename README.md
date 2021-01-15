@@ -15,7 +15,7 @@ Add it in your root build.gradle at the end of repositories:
 Step 2. Add the dependency
 
 	dependencies {
-	        implementation 'com.github.ramin-seyghaly:Banner:0.0.1'
+	        implementation 'com.github.ramin-seyghaly:Banner:0.0.3'
 	}
 Share this release:
 [![](https://jitpack.io/v/ramin-seyghaly/Banner.svg)](https://jitpack.io/#ramin-seyghaly/Banner)
