@@ -1,4 +1,4 @@
-package ramin.seyghaly.banner_view.banner;
+package ramin.seyghaly.banner_view.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -25,11 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ramin.seyghaly.banner_view.R;
-import ramin.seyghaly.banner_view.core.AdsObserverController;
+import ramin.seyghaly.banner_view.models.Banner;
+import ramin.seyghaly.banner_view.adapters.BannerAdapter;
+import ramin.seyghaly.banner_view.models.BannerDesignInfo;
+import ramin.seyghaly.banner_view.interfaces.OnBannerClickListener;
 import ramin.seyghaly.banner_view.tools.Tools;
 
 
-public class AdsBanner extends RelativeLayout implements OnBannerClickListener {
+public class BannerView extends RelativeLayout {
 
     private View view;
     private ViewPager2 mPager;
@@ -63,23 +66,28 @@ public class AdsBanner extends RelativeLayout implements OnBannerClickListener {
     private long bannerSlideDuration = 3000;
     private Typeface bannerFontFamily;
     private BannerDesignInfo bannerDesignInfo = new BannerDesignInfo();
+    private OnBannerClickListener onBannerClickListener;
 
-    public AdsBanner(Context context) {
+    public void setOnBannerClickListener(OnBannerClickListener onBannerClickListener) {
+        this.onBannerClickListener = onBannerClickListener;
+    }
+
+    public BannerView(Context context) {
         super(context);
         init(context,null);
     }
 
-    public AdsBanner(Context context, AttributeSet attrs) {
+    public BannerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context,attrs);
     }
 
-    public AdsBanner(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context,attrs);
     }
 
-    public AdsBanner(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public BannerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context,attrs);
     }
@@ -176,7 +184,7 @@ public class AdsBanner extends RelativeLayout implements OnBannerClickListener {
         view = LayoutInflater.from(context).inflate(R.layout.view_ads_banner, null, false);
         mPager = view.findViewById(R.id.viewpager);
         mPager.setPadding((int) bannerPadding,0,(int) bannerPadding,0);
-        adapter = new BannerAdapter(banners,bannerDesignInfo,this);
+        adapter = new BannerAdapter(banners,bannerDesignInfo,onBannerClickListener);
         mPager.setAdapter(adapter);
         mPager.setClipToPadding(false);
         mPager.setClipChildren(false);
@@ -267,13 +275,6 @@ public class AdsBanner extends RelativeLayout implements OnBannerClickListener {
                 slideHandler.postDelayed(slideRunnable,bannerSlideDuration);
             }
         }catch (Exception e){}
-    }
-
-    @Override
-    public void onBannerClick(Banner banner) {
-        if (getContext() != null){
-            AdsObserverController.getInstance().onAdsClick(banner);
-        }
     }
 
 }

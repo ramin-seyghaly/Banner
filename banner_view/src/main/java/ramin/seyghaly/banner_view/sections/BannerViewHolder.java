@@ -1,4 +1,4 @@
-package ramin.seyghaly.banner_view.banner;
+package ramin.seyghaly.banner_view.sections;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -15,6 +15,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 
 import ramin.seyghaly.banner_view.R;
+import ramin.seyghaly.banner_view.interfaces.OnBannerClickListener;
+import ramin.seyghaly.banner_view.models.Banner;
+import ramin.seyghaly.banner_view.models.BannerDesignInfo;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -71,7 +74,7 @@ public class BannerViewHolder extends RecyclerView.ViewHolder implements View.On
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.root && onBannerClickListener != null && banner != null){
-            onBannerClickListener.onBannerClick(banner);
+            onBannerClickListener.onBannerClicked(banner);
         }
     }
 

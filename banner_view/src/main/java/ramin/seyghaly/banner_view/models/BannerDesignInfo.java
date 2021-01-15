@@ -1,4 +1,4 @@
-package ramin.seyghaly.banner_view.banner;
+package ramin.seyghaly.banner_view.models;
 
 import android.graphics.Typeface;
 

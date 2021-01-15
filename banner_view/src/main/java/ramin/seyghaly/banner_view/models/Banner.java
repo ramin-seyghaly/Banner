@@ -1,17 +1,10 @@
-package ramin.seyghaly.banner_view.banner;
+package ramin.seyghaly.banner_view.models;
 
 
-import ramin.seyghaly.banner_view.core.AdsModel;
-import ramin.seyghaly.banner_view.core.Type;
-
-public class Banner extends AdsModel {
+public class Banner {
 
     private String url;
     private String title;
-
-    public Banner() {
-        super(Type.BANNER);
-    }
 
     public String getUrl() {
         return url;

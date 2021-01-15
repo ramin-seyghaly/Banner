@@ -1,4 +1,4 @@
-package ramin.seyghaly.banner_view.banner;
+package ramin.seyghaly.banner_view.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ramin.seyghaly.banner_view.R;
+import ramin.seyghaly.banner_view.sections.BannerViewHolder;
+import ramin.seyghaly.banner_view.interfaces.OnBannerClickListener;
+import ramin.seyghaly.banner_view.models.Banner;
+import ramin.seyghaly.banner_view.models.BannerDesignInfo;
 
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerViewHolder> {
