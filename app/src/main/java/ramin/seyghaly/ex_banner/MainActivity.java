@@ -1,4 +1,4 @@
-package ramin.seyghaly.bannerexample;
+package ramin.seyghaly.ex_banner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
