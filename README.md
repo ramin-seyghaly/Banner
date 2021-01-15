@@ -33,8 +33,12 @@ add Banner in xlm file
         app:banner_selectedIndicatorColor="@color/purple_500"
         app:banner_unSelectedIndicatorColor="@color/black"
         app:banner_textBackgroundColor="#90C3BDBD"
-        app:banner_radius="16dp"
-        app:banner_slideDuration="10000"/>
+        app:banner_radius="6dp"
+        app:banner_indicatorGravity="bottom"
+        app:banner_titleGravity="top"
+        app:banner_strokeWidth="2dp"
+        app:banner_strokeColor="#000"
+        app:banner_slideDuration="3000"/>
 	
 get refrence and add banner
 
