@@ -30,6 +30,7 @@ import ramin.seyghaly.banner_view.adapters.BannerAdapter;
 import ramin.seyghaly.banner_view.models.BannerDesignInfo;
 import ramin.seyghaly.banner_view.interfaces.OnBannerClickListener;
 import ramin.seyghaly.banner_view.tools.Tools;
+import ramin.seyghaly.banner_view.types.GravityType;
 
 
 public class BannerView extends RelativeLayout {
@@ -37,7 +38,7 @@ public class BannerView extends RelativeLayout {
     private View view;
     private ViewPager2 mPager;
     private BannerAdapter adapter;
-    private LinearLayout layoutOnBoardinIndicators;
+    private LinearLayout rootIndicator;
     private LinearLayout.LayoutParams layoutParams;
     private List<Banner> banners = new ArrayList<>();
     private Handler slideHandler = new Handler(Looper.getMainLooper());
@@ -52,18 +53,23 @@ public class BannerView extends RelativeLayout {
                         mPager.setCurrentItem(mPager.getCurrentItem() + 1);
                     }
                 }
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
     };
     private float scaleRatio;
+    private float bannerStrokeWidth;
     private float bannerPadding;
     private float bannerTitleTextSize;
     private int bannerTitleColor;
+    private int bannerStrokeColor;
     private int bannerSelectedIndicatorColor;
     private int bannerUnSelectedIndicatorColor;
     private int bannerTextBackgroundColor;
     private float bannerRadius;
     private long bannerSlideDuration = 3000;
+    private GravityType bannerTitleGravity;
+    private GravityType bannerIndicatorGravity;
     private Typeface bannerFontFamily;
     private BannerDesignInfo bannerDesignInfo = new BannerDesignInfo();
     private OnBannerClickListener onBannerClickListener;
@@ -74,31 +80,31 @@ public class BannerView extends RelativeLayout {
 
     public BannerView(Context context) {
         super(context);
-        init(context,null);
+        init(context, null);
     }
 
     public BannerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context,attrs);
+        init(context, attrs);
     }
 
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context,attrs);
+        init(context, attrs);
     }
 
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context,attrs);
+        init(context, attrs);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int heightRatio = (heightMeasureSpec * 9)/16;
+        int heightRatio = (heightMeasureSpec * 9) / 16;
         super.onMeasure(widthMeasureSpec, heightRatio);
     }
 
-    private void init(Context context,AttributeSet attrs){
+    private void init(Context context, AttributeSet attrs) {
         bindDefaultValue(context);
         initAttrs(attrs);
         setBannerDesignInfo();
@@ -108,13 +114,16 @@ public class BannerView extends RelativeLayout {
     private void bindDefaultValue(Context context) {
         scaleRatio = getResources().getDisplayMetrics().density;
         bannerPadding = 0;
-        bannerTitleTextSize = Tools.convertSptoPixel(context,16);
+        bannerTitleTextSize = Tools.convertSptoPixel(context, 16);
         bannerRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, getContext().getResources().getDisplayMetrics());
-        bannerTitleColor = Tools.getColor(context,R.color.title_color);
-        bannerSelectedIndicatorColor = Tools.getColor(context,R.color.grey);
-        bannerUnSelectedIndicatorColor = Tools.getColor(context,R.color.white);
-        bannerTextBackgroundColor = Tools.getColor(context,R.color.transparent);
-        //bannerFontFamily = ResourcesCompat.getFont(getContext(), R.font.custom_font_use);
+        bannerTitleColor = Tools.getColor(context, R.color.title_color);
+        bannerSelectedIndicatorColor = Tools.getColor(context, R.color.grey);
+        bannerUnSelectedIndicatorColor = Tools.getColor(context, R.color.white);
+        bannerTextBackgroundColor = Tools.getColor(context, R.color.transparent);
+        bannerTitleGravity = GravityType.BOTTOM;
+        bannerIndicatorGravity = GravityType.BOTTOM;
+        bannerStrokeColor = Tools.getColor(context, R.color.grey);
+        bannerStrokeWidth =  Tools.convertSptoPixel(context, 1);;
     }
 
     private void initAttrs(AttributeSet attrs) {
@@ -126,6 +135,10 @@ public class BannerView extends RelativeLayout {
                     bannerSlideDuration = typedArray.getInteger(slideDurationStyle, (int) bannerSlideDuration);
                 }
                 //region dimension
+                int strokeWidthStyle = R.styleable.AdsBanner_banner_strokeWidth;
+                if (typedArray.hasValue(strokeWidthStyle)) {
+                    bannerStrokeWidth = typedArray.getDimensionPixelSize(strokeWidthStyle, (int) bannerStrokeWidth);
+                }
                 int radiusStyle = R.styleable.AdsBanner_banner_radius;
                 if (typedArray.hasValue(radiusStyle)) {
                     bannerRadius = typedArray.getDimensionPixelSize(radiusStyle, (int) bannerRadius);
@@ -140,6 +153,10 @@ public class BannerView extends RelativeLayout {
                 }
                 //endregion
                 //region color
+                int strokeColorStyle = R.styleable.AdsBanner_banner_strokeColor;
+                if (typedArray.hasValue(strokeColorStyle)) {
+                    bannerStrokeColor = typedArray.getColor(strokeColorStyle, bannerStrokeColor);
+                }
                 int textBackgroundColorStyle = R.styleable.AdsBanner_banner_textBackgroundColor;
                 if (typedArray.hasValue(textBackgroundColorStyle)) {
                     bannerTextBackgroundColor = typedArray.getColor(textBackgroundColorStyle, bannerTextBackgroundColor);
@@ -166,25 +183,40 @@ public class BannerView extends RelativeLayout {
                     }
                 }
                 //endregion
+                //region flags
+                int titleGravityStyle = R.styleable.AdsBanner_banner_titleGravity;
+                if (typedArray.hasValue(titleGravityStyle)) {
+                    int gravity = typedArray.getInt(titleGravityStyle, GravityType.TOP.getValue());
+                    bannerTitleGravity = GravityType.getVal(gravity);
+                }
+                int indicatorGravityStyle = R.styleable.AdsBanner_banner_indicatorGravity;
+                if (typedArray.hasValue(indicatorGravityStyle)) {
+                    int gravity = typedArray.getInt(indicatorGravityStyle, GravityType.BOTTOM.getValue());
+                    bannerIndicatorGravity = GravityType.getVal(gravity);
+                }
+                //endregion
             } finally {
                 typedArray.recycle();
             }
         }
     }
 
-    private void setBannerDesignInfo(){
+    private void setBannerDesignInfo() {
         bannerDesignInfo.setBannerFontFamily(bannerFontFamily);
         bannerDesignInfo.setBannerTitleColor(bannerTitleColor);
         bannerDesignInfo.setBannerTitleTextSize(bannerTitleTextSize);
-        bannerDesignInfo.setTextBackgroundColor(bannerTextBackgroundColor);
+        bannerDesignInfo.setBannerTitleBackgroundColor(bannerTextBackgroundColor);
         bannerDesignInfo.setBannerRadius(bannerRadius);
+        bannerDesignInfo.setBannerTitleGravity(bannerTitleGravity);
+        bannerDesignInfo.setBannerStrokeColor(bannerStrokeColor);
+        bannerDesignInfo.setBannerStrokeWidth(bannerStrokeWidth);
     }
 
-    private void initView(Context context){
+    private void initView(Context context) {
         view = LayoutInflater.from(context).inflate(R.layout.view_ads_banner, null, false);
         mPager = view.findViewById(R.id.viewpager);
-        mPager.setPadding((int) bannerPadding,0,(int) bannerPadding,0);
-        adapter = new BannerAdapter(banners,bannerDesignInfo,onBannerClickListener);
+        mPager.setPadding((int) bannerPadding, 0, (int) bannerPadding, 0);
+        adapter = new BannerAdapter(banners, bannerDesignInfo, onBannerClickListener);
         mPager.setAdapter(adapter);
         mPager.setClipToPadding(false);
         mPager.setClipChildren(false);
@@ -205,76 +237,93 @@ public class BannerView extends RelativeLayout {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 slideHandler.removeCallbacks(slideRunnable);
-                slideHandler.postDelayed(slideRunnable,bannerSlideDuration);
+                slideHandler.postDelayed(slideRunnable, bannerSlideDuration);
                 setCurrentIndicator(position);
             }
         });
         layoutParams = new LinearLayout.LayoutParams(
                 16, 16
         );
-        layoutParams.setMargins(8,0,8,0);
-        layoutOnBoardinIndicators = view.findViewById(R.id.rootIndicator);
+        layoutParams.setMargins(8, 0, 8, 0);
+        rootIndicator = view.findViewById(R.id.rootIndicator);
+        if (bannerIndicatorGravity != null) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rootIndicator.getLayoutParams();
+            switch (bannerIndicatorGravity) {
+                case TOP:
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    break;
+                case BOTTOM:
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    break;
+                case CENTER:
+                    params.addRule(RelativeLayout.CENTER_VERTICAL);
+                    break;
+            }
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            rootIndicator.setLayoutParams(params);
+        }
         addView(view);
     }
 
-    private void setCurrentIndicator(int index){
-        int childCount = layoutOnBoardinIndicators.getChildCount();
-        for (int i = 0 ; i < childCount ; i++){
-            ImageView imageView = (ImageView) layoutOnBoardinIndicators.getChildAt(i);
-            if (i == index){
-                imageView.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.selected_pager_dot));
+    private void setCurrentIndicator(int index) {
+        int childCount = rootIndicator.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            ImageView imageView = (ImageView) rootIndicator.getChildAt(i);
+            if (i == index) {
+                imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.selected_pager_dot));
                 imageView.setColorFilter(bannerSelectedIndicatorColor, android.graphics.PorterDuff.Mode.SRC_IN);
-            }else {
-                imageView.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.unselected_pager_dot));
+            } else {
+                imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.unselected_pager_dot));
                 imageView.setColorFilter(bannerUnSelectedIndicatorColor, android.graphics.PorterDuff.Mode.SRC_IN);
             }
         }
     }
 
-    public void addBanner(Banner banner){
+    public void addBanner(Banner banner) {
         slideHandler.removeCallbacks(slideRunnable);
         banners.add(banner);
         update();
     }
 
-    public void addBanners(List<Banner> banners){
+    public void addBanners(List<Banner> banners) {
         slideHandler.removeCallbacks(slideRunnable);
         this.banners.addAll(banners);
         update();
     }
 
-    public void clear(){
+    public void clear() {
         slideHandler.removeCallbacks(slideRunnable);
         banners.clear();
         update();
     }
 
-    public void onPause(){
+    public void onPause() {
         slideHandler.removeCallbacks(slideRunnable);
     }
 
-    public void onResume(){
-        slideHandler.postDelayed(slideRunnable,bannerSlideDuration);
+    public void onResume() {
+        slideHandler.postDelayed(slideRunnable, bannerSlideDuration);
     }
 
-    private void update(){
+    private void update() {
         try {
-            layoutOnBoardinIndicators.removeAllViews();
+            rootIndicator.removeAllViews();
             ImageView[] indicator = new ImageView[banners.size()];
-            for (int i = 0 ; i < indicator.length ; i++){
+            for (int i = 0; i < indicator.length; i++) {
                 indicator[i] = new ImageView(getContext());
                 indicator[i].setImageDrawable(
-                        ContextCompat.getDrawable(getContext(),R.drawable.unselected_pager_dot)
+                        ContextCompat.getDrawable(getContext(), R.drawable.unselected_pager_dot)
                 );
                 indicator[i].setLayoutParams(layoutParams);
-                layoutOnBoardinIndicators.addView(indicator[i]);
+                rootIndicator.addView(indicator[i]);
             }
             setCurrentIndicator(0);
             adapter.notifyDataSetChanged();
-            if (!banners.isEmpty()){
-                slideHandler.postDelayed(slideRunnable,bannerSlideDuration);
+            if (!banners.isEmpty()) {
+                slideHandler.postDelayed(slideRunnable, bannerSlideDuration);
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 
 }

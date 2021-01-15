@@ -2,13 +2,18 @@ package ramin.seyghaly.banner_view.models;
 
 import android.graphics.Typeface;
 
+import ramin.seyghaly.banner_view.types.GravityType;
+
 public class BannerDesignInfo {
 
     private Typeface bannerFontFamily;
     private int bannerTitleColor;
-    private int textBackgroundColor;
+    private int bannerTitleBackgroundColor;
+    private int bannerStrokeColor;
     private float bannerTitleTextSize;
     private float bannerRadius;
+    private float bannerStrokeWidth;
+    private GravityType bannerTitleGravity;
 
     public Typeface getBannerFontFamily() {
         return bannerFontFamily;
@@ -34,14 +39,6 @@ public class BannerDesignInfo {
         this.bannerTitleTextSize = bannerTitleTextSize;
     }
 
-    public int getTextBackgroundColor() {
-        return textBackgroundColor;
-    }
-
-    public void setTextBackgroundColor(int textBackgroundColor) {
-        this.textBackgroundColor = textBackgroundColor;
-    }
-
     public float getBannerRadius() {
         return bannerRadius;
     }
@@ -50,4 +47,35 @@ public class BannerDesignInfo {
         this.bannerRadius = bannerRadius;
     }
 
+    public GravityType getBannerTitleGravity() {
+        return bannerTitleGravity;
+    }
+
+    public void setBannerTitleGravity(GravityType bannerTitleGravity) {
+        this.bannerTitleGravity = bannerTitleGravity;
+    }
+
+    public int getBannerTitleBackgroundColor() {
+        return bannerTitleBackgroundColor;
+    }
+
+    public void setBannerTitleBackgroundColor(int bannerTitleBackgroundColor) {
+        this.bannerTitleBackgroundColor = bannerTitleBackgroundColor;
+    }
+
+    public int getBannerStrokeColor() {
+        return bannerStrokeColor;
+    }
+
+    public void setBannerStrokeColor(int bannerStrokeColor) {
+        this.bannerStrokeColor = bannerStrokeColor;
+    }
+
+    public float getBannerStrokeWidth() {
+        return bannerStrokeWidth;
+    }
+
+    public void setBannerStrokeWidth(float bannerStrokeWidth) {
+        this.bannerStrokeWidth = bannerStrokeWidth;
+    }
 }

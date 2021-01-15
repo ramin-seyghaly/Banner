@@ -4,11 +4,23 @@
         <attr name="banner_padding" format="dimension"/>
         <attr name="banner_titleTextSize" format="dimension"/>
         <attr name="banner_radius" format="dimension"/>
+        <attr name="banner_strokeWidth" format="dimension"/>
         <attr name="banner_titleTextColor" format="color"/>
         <attr name="banner_selectedIndicatorColor" format="color"/>
         <attr name="banner_unSelectedIndicatorColor" format="color"/>
         <attr name="banner_textBackgroundColor" format="color"/>
+        <attr name="banner_strokeColor" format="color"/>
         <attr name="banner_fontFamily" format="reference"/>
         <attr name="banner_slideDuration" format="integer"/>
+        <attr name="banner_indicatorGravity" format="enum">
+            <enum name="top" value="0" />
+            <enum name="center" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
+        <attr name="banner_titleGravity" format="enum">
+            <enum name="top" value="0" />
+            <enum name="center" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
     </declare-styleable>
 </resources>
